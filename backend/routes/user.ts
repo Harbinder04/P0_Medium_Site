@@ -4,7 +4,8 @@ import bycrypt from 'bcryptjs';
 import { sign } from 'hono/jwt'
 import {env} from 'hono/adapter';
 import { Hono } from 'hono';
-  
+import { signinInput, signupInput } from '@harbinder/medium-blog';
+
 const userRoute = new Hono();
   // sign-up route 
   userRoute.post('/signup', async (c) => {  // c - context
@@ -15,7 +16,10 @@ const userRoute = new Hono();
       }).$extends(withAccelerate());
   
       const body = await c.req.json();
-  
+      const success = signupInput.safeParse(body);
+      if(!success){
+        return c.json({msg: "Invalid input"}, 400)
+      }
       // Check if the user already exists
       const user = await prisma.user.findFirst({
         where: {
@@ -60,7 +64,10 @@ const userRoute = new Hono();
       }).$extends(withAccelerate());
   
       const body = await c.req.json();
-  
+      const success = signinInput.safeParse(body);
+      if(!success){
+        return c.json({msg: "Invalid input"}, 400)
+      }
       // Check if the user already exists
       const user = await prisma.user.findUnique({
         where: {
