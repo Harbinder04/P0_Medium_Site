@@ -39,7 +39,7 @@ blogRouter.use('/*', async (c, next) => {
       if(!success){
         return c.json({msg: "Invalid input"}, 400)
       }
-      await prisma.post.create({
+      const res = await prisma.post.create({
         data: {
           title: body.title,
           content: body.content,
@@ -48,8 +48,10 @@ blogRouter.use('/*', async (c, next) => {
         },
       });
   
-      return c.json({msg: "Post uploaded successfull"}, 201);
+      return c.json({id:res.id,
+        msg: "Post uploaded successfull"}, 201);
   })
+  
   
   blogRouter.put('/post/update', async (c) => {
     const body = await c.req.json();
@@ -110,7 +112,18 @@ blogRouter.use('/*', async (c, next) => {
       }).$extends(withAccelerate());
   
       try{
-      const allPost = await prisma.post.findMany({});
+      const allPost = await prisma.post.findMany({
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          author: {
+            select: {
+              name: true
+            }
+          }
+        }
+      });
       return c.json({allPost});
   
       }catch(error){
@@ -130,6 +143,16 @@ blogRouter.use('/*', async (c, next) => {
         where: {
           id: id,
         },
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          author: {
+            select: {
+              name: true
+            }
+          }
+        }
       });
   
       if (!post) {
