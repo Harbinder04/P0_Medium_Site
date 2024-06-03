@@ -4,7 +4,7 @@ export  const  Appbar = () => {
     return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 md:justify-start">
-  <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
+  <a href="" className="flex items-center space-x-3 rtl:space-x-reverse">
       <span className="self-center text-2xl font-bold whitespace-nowrap dark:text-white mr-8">Medium</span>
   </a>
   <div className="flex md:order-2">

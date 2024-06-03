@@ -1,38 +1,43 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useBlog } from '../hooks/index'
+import { useBlog, BlogType } from '../hooks/index';
 import { Appbar } from '../components/Appbar';
-import { BlogPostView } from '../components/BlogPostView'
+import { BlogPostView } from '../components/BlogPostView';
+import { format } from 'date-fns';
+import parse from 'html-react-parser';
 
-interface BlogPostView{
-    title: string,
-    content: string,
-    publishDate: string,
-    author: string
-  }
+export const Blog: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const { loading, blog }: { loading: boolean; blog: BlogType | undefined } = useBlog({ id: id || "" });
 
-export const Blog = () => {
-    const {id} = useParams();
-    const {loading, blog } = useBlog(
-        {id: id || ""}
-    );
+    const formattedDate = blog?.published_date
+        ? format(new Date(blog.published_date), 'MMM dd, yyyy')
+        : 'Unknown date';
 
-    if(loading) {
-        return <div>
-            loading...
-        </div>
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!blog) {
+        return <div>Blog not found</div>;
     }
 
     return (
-      <div>
         <div>
-        <Appbar/>
+            <Appbar />
+            <div className='flex justify-center items-center mx-3'>
+                <BlogPostView  
+                //@ts-ignore
+                title={parse(blog.title) || "Title Undefined"}
+                //@ts-ignore
+                    content={parse(blog.content) || "Unable to fetch the content"}
+                    img={blog.img || "Cover image"}
+                    published_date={formattedDate}
+                    author={blog.author.name || "Unknown author"}
+                />
+            </div>
         </div>
-        <div className='flex justify-center items-center mx-3'>
-            <BlogPostView title={blog?.title || "Title Undefined"}
-          content={blog?.content || "Content not available"}
-          publishDate={blog?.publishDate || "Unknown publish date"}
-          author={blog?.author.name || "Unknown author"} />
-        </div>
-      </div>
-    )
+    );
 }
+
+export default Blog;

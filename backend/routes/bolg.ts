@@ -43,6 +43,8 @@ blogRouter.use('/*', async (c, next) => {
         data: {
           title: body.title,
           content: body.content,
+          img: body.img,
+          published_date: new Date(),
           published: body.published,
           authorId: userId
         },
@@ -76,7 +78,7 @@ blogRouter.use('/*', async (c, next) => {
       }
     }
 
-    const data: { title?: string; content?: string; published?: boolean } = {};
+    const data: { title?: string; content?: string; img?: string; published?: boolean } = {};
   
     if (body.title) {
       data.title = body.title;
@@ -86,6 +88,10 @@ blogRouter.use('/*', async (c, next) => {
       data.content = body.content;
     }
     
+    if (body.img) {
+      data.img = body.img;
+    }
+
     if (typeof body.published === 'boolean') {
       data.published = body.published;
     }
@@ -117,6 +123,8 @@ blogRouter.use('/*', async (c, next) => {
           id: true,
           title: true,
           content: true,
+          img: true,
+          published_date: true,
           author: {
             select: {
               name: true
@@ -147,6 +155,8 @@ blogRouter.use('/*', async (c, next) => {
           id: true,
           title: true,
           content: true,
+          img: true,
+          published_date: true,
           author: {
             select: {
               name: true

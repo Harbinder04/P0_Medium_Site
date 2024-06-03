@@ -1,11 +1,12 @@
 interface BlogPostViewProps{
   title: string,
   content: string,
-  publishDate: string,
+  published_date: string,
+  img: string,
   author: string
 }
 
-export function BlogPostView({title, content, publishDate, author} : BlogPostViewProps) {
+export function BlogPostView({title, content, published_date, img, author} : BlogPostViewProps) {
   return (
     <div className="md:w-[624px]">
         <div className="font-bold text-3xl mt-3">
@@ -25,13 +26,16 @@ export function BlogPostView({title, content, publishDate, author} : BlogPostVie
         </div>
         <div className="flex flex-col">
         <span className="flex flex-row justify-between w-full">
-          {content.length/100 + " min read "} <span className="w-fit flex justify-center items-center mx-4"> | </span>{publishDate}
+          {content.length/100 + " min read "} <span className="w-fit flex justify-center items-center mx-4"> | </span>{published_date}
         </span>
         </div>
         </div>
         </div>
         {/* content div */}
-        <div className="text-lg text-4 tracking-wide md:w-full">
+        <div className="w-full">  {/* Image added successfully */}
+          <img src={img} alt="Cover image" />
+        </div>
+        <div className="text-lg text-4 tracking-wide md:w-full mt-8">
           {content}
         </div>
     </div>

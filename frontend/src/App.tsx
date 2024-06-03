@@ -1,4 +1,3 @@
-import './App.css'
 import { Signup } from './pages/Singup';
 import { Signin } from './pages/Signin';
 import { Blogs } from './pages/Blogs';

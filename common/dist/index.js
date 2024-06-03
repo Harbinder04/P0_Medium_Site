@@ -18,6 +18,7 @@ exports.signinInput = zod_1.default.object({
 exports.createblogInput = zod_1.default.object({
     title: zod_1.default.string(),
     content: zod_1.default.string(),
+    img: zod_1.default.string(),
     published: zod_1.default.boolean().default(false)
 });
 exports.UpdateblogInput = zod_1.default.object({

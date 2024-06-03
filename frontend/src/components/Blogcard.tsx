@@ -1,23 +1,45 @@
 import { Link } from "react-router-dom";
+import React from "react";
+import { ReactNode } from 'react';
 
 interface BlogCardPorps {
   id: string;
   author: string;
   title: string;
   content: string;
-  publishedDate: string;
+  img: string;
+  published_date: string;
 }
+
+const extractTextContent = (node: ReactNode): string => {
+    if (typeof node === 'string') {
+        return node;
+    }
+    if (Array.isArray(node)) {
+        return node.map(extractTextContent).join('');
+    }
+    if (React.isValidElement(node)) {
+        return extractTextContent(node.props.children);
+    }
+    return '';
+};
+
 
 export function Blogcard({
   id,
   author,
   title,
   content,
-  publishedDate,
+  img,
+  published_date,
 }: BlogCardPorps) {
+  const textContent = extractTextContent(content);
+    const isLongContent = textContent.length > 100;
+    const displayedContent = isLongContent ? textContent.slice(0, 100) + '....' : textContent;
   return (
     <Link to={`/blog/${id}`}>
-    <div className="flex flex-col py-2 border-b-[1px] shadow-sm m-2 md:ml-10 hover:cursor-pointer">
+    <div className="flex flex-row justify-between py-2 border-b-[1px] shadow-sm m-2 w-full">
+    <div className="flex flex-col m-2 md:ml-10 hover:cursor-pointer w-3xl">
       {/* post upper part started */}
       <div className="flex space-x-4 items-center">
         {/* avatar started */}
@@ -35,14 +57,14 @@ export function Blogcard({
           </span>
           <span className="font-thin space-x-5 text-sm flex items-center justify-center flex-row mx-3">
             {" "}
-            {publishedDate}
+            {published_date}
           </span>
         </div>
       </div>{" "}
       {/* post upper part closed */}
       <div className="font-bold text-2xl mt-3">{title}</div>
       <div className="font-normal text-md mt-3 text-slate-600">
-        {content.length > 100 ? content : content.slice(0, 100) + "...."}
+      {isLongContent ? displayedContent : content}
       </div>
       {/* main body closed */}
       <div className="flex justify-between items-center">
@@ -52,6 +74,10 @@ export function Blogcard({
         <p className="text-lg font-medium text-gray-900 dark:text-white mr-10">
           ...
         </p>
+      </div>
+    </div>
+    <div className="md:flex justify-center items-center hidden md:visible md:ml-6 md:mr-2">
+        <img src={img} alt="Cover.png" className="w-80" />
       </div>
     </div>
     </Link>
