@@ -8,7 +8,6 @@ import { format } from 'date-fns';
 
 export const Blogs: React.FC = () => {
     const { loading, blogs } = useBlogs();
-
     if (loading) {
         return <div>Loading...</div>;
     }

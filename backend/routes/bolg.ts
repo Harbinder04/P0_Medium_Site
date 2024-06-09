@@ -20,7 +20,7 @@ blogRouter.use('/*', async (c, next) => {
     const user: any = await verify(tokenToverify, c.env.JWT_SECRET);
     if(user){
       c.set("userId", user.id);
-    await next()
+      await next()
     }
 
     return c.json({msg: 'Authentication failed'}, 403);
@@ -138,8 +138,80 @@ blogRouter.use('/*', async (c, next) => {
         return c.json({error: "Internal server error"}, 500)
       };
     });
+  
+  //delete blog post 
+  blogRouter.delete('/deletemyPost', async (c) =>{
+    const {id: postId} = await c.req.json();
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
 
+    const authorId = c.get('userId');
+    if (!authorId) {
+      return c.json({ msg: 'Unauthorized' }, 401);
+    }
+  
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+  
+    if (!post) {
+      return c.json({ msg: 'Post not found' }, 404);
+    }
+  
+    if (post.authorId !== authorId) {
+      return c.json({ msg: 'Forbidden: You do not have access to this post' }, 403);
+    }
+  
+    const response = await prisma.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+  
+    return c.json({ msg: 'Post deleted successfully',
+      id: response.id
+     }, 204);
+  });
 
+  // Route to get blog posts by author
+blogRouter.get('/posts/byAuthor', async (c) => {
+  const authorId = c.get('userId');
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  
+  if (!authorId) {
+    return c.json({ msg: 'Unauthorized' }, 401);
+  }
+
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        authorId: authorId,
+      },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        img: true,
+        published_date: true,
+        author: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
+    return c.json(posts, 200);
+  } catch (error) {
+    return c.json({ msg: 'Error retrieving posts' }, 500);
+  }
+});
+
+ // to get the perticular blog from post table. 
   blogRouter.get('/:id', async (c) => {
     const id = c.req.param('id');
     const prisma = new PrismaClient({

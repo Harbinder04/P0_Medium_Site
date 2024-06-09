@@ -65,7 +65,7 @@ export const useBlogs = () =>{
         response => {
             const transformedBlogs = response.data.allPost.map((blog: BlogType) => ({
                 ...blog,
-                title: parse(blog.title),
+                title: parse(blog.title),  //overriding title to get the data in correct form [object][object]... problem
                 content: parse(blog.content),
             }));
             setBlogs(transformedBlogs);
@@ -79,5 +79,39 @@ export const useBlogs = () =>{
     return {
         loading,
         blogs
+    }
+}
+
+export const useProfileBlogs = () =>{
+    const [loading, setLoading] = useState(true);
+    const [blogs, setBlogs] = useState<Blogs[]>([]);
+    const [author, setAuthor] = useState("");
+    useEffect(()=>{
+        console.log("request sent");
+       axios.get(`${BACKEND_URL}/api/v1/blog/posts/byAuthor`, {
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem('token')
+        }
+       }).then(
+        response => {
+            console.log(response);
+            const transformedBlogs = response.data.map((blog: BlogType) => ({
+                ...blog,
+                title: parse(blog.title),  //overriding title to get the data in correct form [object][object]... problem
+                content: parse(blog.content),
+            }));
+            setBlogs(transformedBlogs);
+            setAuthor(response.data[0].author.name);
+            setLoading(false);
+        }).catch(error => {
+            console.error("Error fetching blogs:", error);
+            setLoading(false);
+        });
+    }, []);
+
+    return {
+        loading,
+        blogs,
+        author
     }
 }

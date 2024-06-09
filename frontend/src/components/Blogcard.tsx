@@ -11,6 +11,7 @@ interface BlogCardPorps {
   published_date: string;
 }
 
+//ensure that getting text
 const extractTextContent = (node: ReactNode): string => {
     if (typeof node === 'string') {
         return node;

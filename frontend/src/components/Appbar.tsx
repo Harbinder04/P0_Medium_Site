@@ -1,5 +1,7 @@
-import React from "react";
+
 import { useNavigate } from "react-router-dom";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { FlyoutLink } from "./FlyoutLink";
 
 export const Appbar = () => {
   const navigate = useNavigate();
@@ -10,20 +12,25 @@ export const Appbar = () => {
   }
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900 mx-10">
+    <nav className="bg-white border-gray-200 dark:bg-gray-900 w-full border">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a
           href="/blogs"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <span className="self-center text-2xl font-bold whitespace-nowrap dark:text-white mr-8">
+          <span className="self-center text-2xl font-bold whitespace-nowrap ml-16">
             BloGy Fi
           </span>
         </a>
         <SearchBar />
-        <div className="bg-green-600 hover:bg-green-400 rounded-full px-5 py-2 font-semibold text-white">
-          <button onClick={routeChange}>Create</button>
+        <div className="flex pr-5">
+        <div className="bg-green-600 hover:bg-green-400 rounded-full px-5 py-2 font-semibold text-white mr-12">
+          <button onClick={routeChange}>Write</button>
         </div>
+        <div className="flex justify-center items-center">
+          <FlyoutLink href={"/profile"} children={<GiHamburgerMenu />}/>
+          </div>
+          </div>
       </div>
     </nav>
   );
@@ -54,9 +61,9 @@ function SearchBar(){
           >
             <path
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
             />
           </svg>
