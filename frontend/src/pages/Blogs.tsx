@@ -4,12 +4,15 @@ import { Blogcard } from '../components/Blogcard';
 import { Appbar } from '../components/Appbar';
 import { useBlogs } from '../hooks/index';
 import { format } from 'date-fns';
-
+import Loader from '../components/Loader';
 
 export const Blogs: React.FC = () => {
     const { loading, blogs } = useBlogs();
+
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className='flex justify-center items-center h-screen w-screen'>
+            <Loader />
+        </div>;
     }
 
     return (

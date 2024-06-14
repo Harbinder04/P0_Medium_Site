@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { ReactNode } from "react";
-import { BACKEND_URL } from "../config";
-import axios from "axios";
+import { MdDelete } from "react-icons/md";
 
 type UserBlogPostCard = {
   id: string;
@@ -10,6 +9,7 @@ type UserBlogPostCard = {
   content: string;
   img: string;
   published_date: string;
+  handleDelete: Function;
 };
 
 const extractTextContent = (node: ReactNode): string => {
@@ -31,7 +31,8 @@ export default function UserBlogPostCard({
   title,
   content,
   img,
-  published_date,
+  published_date, 
+  handleDelete
 }: UserBlogPostCard) {
   const textContent = extractTextContent(content);
   const isLongContent = textContent.length > 15;
@@ -39,25 +40,6 @@ export default function UserBlogPostCard({
     ? textContent.slice(0, 50) + "...."
     : textContent;
 
-    const handleClick = async () => {
-        console.log("request sent");
-        await axios.delete(`${BACKEND_URL}/api/v1/blog/deletemyPost`, {
-            data: { id: id },
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem('token')
-            }
-          }).then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.error("There was an error making the delete request!", error);
-          if (error.response) {
-              console.error("Error response data:", error.response.data);
-              console.error("Error response status:", error.response.status);
-              console.error("Error response headers:", error.response.headers);
-          }
-      });
-      };
 
   return (
     <div className="m-4 border-b shadow-sm">
@@ -87,9 +69,9 @@ export default function UserBlogPostCard({
               <div className="font-thin text-sm mt-3 text-slate-500 p-3">
                 {published_date}
               </div>
-              <button onClick={handleClick}>
+              <button onClick={() => handleDelete(id)}>
               <p className="text-lg font-medium text-gray-900 mr-10 hover:text-gray-500 cursor-pointer">
-                ...
+              <MdDelete />
               </p>
               </button>
             </div>

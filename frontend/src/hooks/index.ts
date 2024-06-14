@@ -107,11 +107,12 @@ export const useProfileBlogs = () =>{
             console.error("Error fetching blogs:", error);
             setLoading(false);
         });
-    }, []);
+    }, [blogs]);
 
     return {
         loading,
         blogs,
-        author
+        author,
+        setBlogs
     }
 }

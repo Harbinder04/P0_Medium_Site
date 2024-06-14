@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useBlog, BlogType } from '../hooks/index';
 import { Appbar } from '../components/Appbar';
+import Loader from '../components/Loader';
 import { BlogPostView } from '../components/BlogPostView';
 import { format } from 'date-fns';
 import parse from 'html-react-parser';
@@ -15,7 +16,9 @@ export const Blog: React.FC = () => {
         : 'Unknown date';
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className='flex justify-center items-center h-screen w-screen'>
+            <Loader />
+        </div>;
     }
 
     if (!blog) {

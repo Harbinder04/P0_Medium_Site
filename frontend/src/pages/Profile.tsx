@@ -4,9 +4,44 @@ import { Appbar } from "../components/Appbar";
 import UserBlogPostCard from "../components/UserBlogPostCard";
 import {useProfileBlogs} from "../hooks/index"
 import { format } from 'date-fns';
+import axios from "axios";
+import { BACKEND_URL } from "../config";
+import Loader from "../components/Loader";
 
 export default function Profile() {
-  const { loading, blogs, author } = useProfileBlogs();
+  const { loading, blogs, author, setBlogs } = useProfileBlogs();
+
+  const handleDelete = async (id: string) => {
+    try {
+      console.log("Request sent");
+      const response = await axios.delete(`${BACKEND_URL}/api/v1/blog/deletemyPost`, {
+        data: { id: id },
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token'),
+        },
+      });
+      console.log("Delete response:", response);
+      if (response.status === 200) {
+        console.log("Post deleted successfully");
+        // Update state to remove the deleted post
+        setBlogs(blogs.filter(blog => blog.id !== id));
+      } else {
+        console.error("Unexpected response status:", response.status);
+      }
+    } catch (error) {
+      console.error("There was an error making the delete request!", error);
+      if (error) {
+        console.error("Error response data:", error);
+      }
+    }
+  };
+
+  if (loading) {
+    return <div className='flex justify-center items-center'>
+        <Loader />
+    </div>;
+}
+
   return (
     <div className="w-screen h-screen flex flex-col">
       <Appbar />
@@ -24,6 +59,7 @@ export default function Profile() {
               content={blog.content || "Unable to fetch the content"}
               img={blog.img}
               published_date={format(new Date(blog.published_date), 'MMM dd, yyyy')}
+              handleDelete={handleDelete}
             />
             ))}
           </div>

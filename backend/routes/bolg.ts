@@ -140,40 +140,43 @@ blogRouter.use('/*', async (c, next) => {
     });
   
   //delete blog post 
-  blogRouter.delete('/deletemyPost', async (c) =>{
-    const {id: postId} = await c.req.json();
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
-
-    const authorId = c.get('userId');
-    if (!authorId) {
-      return c.json({ msg: 'Unauthorized' }, 401);
+  blogRouter.delete('/deletemyPost', async (c) => {
+    try {
+      const { id: postId } = await c.req.json();
+      const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+      }).$extends(withAccelerate());
+  
+      const authorId = c.get('userId');
+      if (!authorId) {
+        return c.json({ msg: 'Unauthorized' }, 401);
+      }
+  
+      const post = await prisma.post.findUnique({
+        where: {
+          id: postId,
+        },
+      });
+  
+      if (!post) {
+        return c.json({ msg: 'Post not found' }, 404);
+      }
+  
+      if (post.authorId !== authorId) {
+        return c.json({ msg: 'Forbidden: You do not have access to this post' }, 403);
+      }
+  
+      const response = await prisma.post.delete({
+        where: {
+          id: postId,
+        },
+      });
+  
+      return c.json({ msg: 'Post deleted successfully', id: response.id }, 200);  // Use 200 OK status
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      return c.json({ msg: 'Internal Server Error' }, 500);  // Ensure any 
     }
-  
-    const post = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-    });
-  
-    if (!post) {
-      return c.json({ msg: 'Post not found' }, 404);
-    }
-  
-    if (post.authorId !== authorId) {
-      return c.json({ msg: 'Forbidden: You do not have access to this post' }, 403);
-    }
-  
-    const response = await prisma.post.delete({
-      where: {
-        id: postId,
-      },
-    });
-  
-    return c.json({ msg: 'Post deleted successfully',
-      id: response.id
-     }, 204);
   });
 
   // Route to get blog posts by author
