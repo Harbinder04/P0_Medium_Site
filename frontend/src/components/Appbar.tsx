@@ -18,7 +18,7 @@ export const Appbar = () => {
           href="/blogs"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <span className="self-center text-2xl font-bold whitespace-nowrap ml-16">
+          <span className="self-center text-2xl font-bold whitespace-nowrap ml-16 text-white">
             BloGy Fi
           </span>
         </a>

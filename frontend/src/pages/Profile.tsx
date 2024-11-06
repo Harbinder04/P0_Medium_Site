@@ -5,7 +5,7 @@ import UserBlogPostCard from "../components/UserBlogPostCard";
 import {useProfileBlogs} from "../hooks/index"
 import { format } from 'date-fns';
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config.ts";
 import Loader from "../components/Loader";
 
 export default function Profile() {

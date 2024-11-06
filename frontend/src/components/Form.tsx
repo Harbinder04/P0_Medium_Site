@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { singnupInput, singninInput} from "@harbinder/medium-blog";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config.ts";
 
 // 📌 bad code 
 

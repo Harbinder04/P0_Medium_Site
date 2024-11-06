@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
 import axios from "axios";
 import { Appbar } from "../components/Appbar";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config.ts";
 import { useNavigate } from "react-router-dom";
 import '../custom_css/Publish.css' 
 
